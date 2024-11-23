@@ -2,13 +2,13 @@
   "name": "my-instagram",
   "version": "0.1.0",
   "private": true,
+  
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",  
+    "export": "next export",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "npm run build && npm run export"
+    "lint": "next lint"
   }
   ,
   "dependencies": {
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "15.0.3"
+    "eslint-config-next": "15.0.3",
+    "gh-pages": "^6.2.0"
   }
 }

@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'export', 
-  basePath: 'unchainedraggedy', 
-  trailingSlash: true, 
+  output: 'export',
 };
 
 export default nextConfig;
