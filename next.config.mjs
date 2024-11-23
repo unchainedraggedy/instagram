@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'export', 
   basePath: 'unchainedraggedy', 
-  trailingSlash: true, // Добавить слеш в конце URL
+  trailingSlash: true, 
 };
 
 export default nextConfig;

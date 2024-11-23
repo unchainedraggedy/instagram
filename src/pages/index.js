@@ -154,7 +154,7 @@ export default function Home() {
             )}
           </div>
 
-          {/* Лента постов */}
+          {}
           <div className={styles.posts}>
             {posts.map((post) => (
               <div key={post.id} className={styles.postCard}>
