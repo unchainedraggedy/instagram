@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
+import styles from "../styles/Home.module.css";
+import Button from "../components/Button";
 
 const userInitial = {
-  name: "Ashura",
-  username: "rggedyman",
+  name: "user",
+  username: "username",
   avatar: "/images/avatar.jpg",
 };
 
@@ -17,6 +18,7 @@ export default function Home() {
   const [newName, setNewName] = useState(user.name);
   const [isUsernameEditing, setIsUsernameEditing] = useState(false);
   const [newUsername, setNewUsername] = useState(user.username);
+  const [isNameEditing, setIsNameEditing] = useState(false);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -42,13 +44,13 @@ export default function Home() {
   };
 
   const handlePostSubmit = () => {
-    if (image && newPostDescription) {
+    if (image) {
       setPosts([
         ...posts,
         {
           id: posts.length + 1,
           image: imagePreview,
-          description: newPostDescription,
+          description: newPostDescription || "",
           likes: 0,
         },
       ]);
@@ -102,8 +104,27 @@ export default function Home() {
               height={100}
             />
             <div className={styles.profileInfo}>
-              <h2>{user.name}</h2>
-              <p onClick={toggleUsernameEdit} style={{ cursor: 'pointer' }}>
+              <h2
+                onClick={() => setIsNameEditing(true)}
+                style={{ cursor: "pointer" }}
+              >
+                {isNameEditing ? (
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={handleNameChange}
+                    onBlur={() => {
+                      handleNameSubmit();
+                      setIsNameEditing(false);
+                    }}
+                    autoFocus
+                    className={styles.editNameInput}
+                  />
+                ) : (
+                  user.name
+                )}
+              </h2>
+              <p onClick={toggleUsernameEdit} style={{ cursor: "pointer" }}>
                 {isUsernameEditing ? (
                   <input
                     type="text"
@@ -147,14 +168,11 @@ export default function Home() {
                   placeholder="Описание поста"
                   className={styles.postDescription}
                 />
-                <button onClick={handlePostSubmit} className={styles.uploadButton}>
-                  Опубликовать
-                </button>
+                <Button onClick={handlePostSubmit}>Опубликовать</Button>
               </div>
             )}
           </div>
 
-          {}
           <div className={styles.posts}>
             {posts.map((post) => (
               <div key={post.id} className={styles.postCard}>
