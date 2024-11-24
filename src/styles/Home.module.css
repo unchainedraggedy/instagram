@@ -126,3 +126,20 @@
   font-weight: bold;
   color: #ed4956;
 }
+
+/* В styles/Home.module.css */
+
+.avatarContainer {
+  position: relative; /* Это необходимо для того, чтобы разместить иконку поверх аватара */
+}
+
+.avatar {
+  border-radius: 50%; /* Чтобы аватар был круглый */
+}
+
+.cameraIconWrapper {
+  position: absolute;
+  top: 5px;  /* Настройте положение иконки относительно верхней границы аватара */
+  right: 5px; /* Настройте положение иконки относительно правой границы аватара */
+  cursor: pointer;
+}

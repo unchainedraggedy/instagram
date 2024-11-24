@@ -1,32 +1,34 @@
-import { useState } from "react";
+import { useRef } from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Button from "../components/Button";
+import { CameraIcon } from "../components/CameraIcon";
+import useStateObject from "../hooks/useState";
 
 const userInitial = {
-  name: "user",
-  username: "username",
+  name: "",
+  username: "",
   avatar: "/images/avatar.jpg",
+  image: null,
+  imagePreview: null,
+  posts: [],
+  newPostDescription: "",
+  isUsernameEditing: false,
+  isNameEditing: false,
 };
 
 export default function Home() {
-  const [user, setUser] = useState(userInitial);
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [newPostDescription, setNewPostDescription] = useState("");
-  const [newName, setNewName] = useState(user.name);
-  const [isUsernameEditing, setIsUsernameEditing] = useState(false);
-  const [newUsername, setNewUsername] = useState(user.username);
-  const [isNameEditing, setIsNameEditing] = useState(false);
+  const { setValue, getValue } = useStateObject(userInitial);
+
+  const fileInputRef = useRef(null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(file);
-        setImagePreview(reader.result);
+        setValue("image", file);
+        setValue("imagePreview", reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -37,54 +39,58 @@ export default function Home() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUser((prevUser) => ({ ...prevUser, avatar: reader.result }));
+        setValue("avatar", reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handlePostSubmit = () => {
-    if (image) {
-      setPosts([
-        ...posts,
+    if (getValue("image")) {
+      setValue("posts", [
+        ...getValue("posts"),
         {
-          id: posts.length + 1,
-          image: imagePreview,
-          description: newPostDescription || "",
+          id: getValue("posts").length + 1,
+          image: getValue("imagePreview"),
+          description: getValue("newPostDescription") || "",
           likes: 0,
         },
       ]);
-      setImage(null);
-      setImagePreview(null);
-      setNewPostDescription("");
+      setValue("image", null);
+      setValue("imagePreview", null);
+      setValue("newPostDescription", "");
     }
   };
 
   const handleNameChange = (e) => {
-    setNewName(e.target.value);
+    setValue("newName", e.target.value);
   };
 
   const handleNameSubmit = () => {
-    setUser((prevUser) => ({ ...prevUser, name: newName }));
+    setValue("name", getValue("newName"));
   };
 
   const toggleUsernameEdit = () => {
-    setIsUsernameEditing((prev) => !prev);
+    setValue("isUsernameEditing", !getValue("isUsernameEditing"));
   };
 
   const handleUsernameChange = (e) => {
-    setNewUsername(e.target.value);
+    setValue("newUsername", e.target.value);
   };
 
   const handleUsernameSubmit = () => {
-    setUser((prevUser) => ({ ...prevUser, username: newUsername }));
-    setIsUsernameEditing(false);
+    setValue("username", getValue("newUsername"));
+    setValue("isUsernameEditing", false);
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current.click();
   };
 
   return (
     <>
       <Head>
-        <title>{`${user.username} — Instagram`}</title>
+        <title>{`${getValue("username") || "username"} — Instagram`}</title>
         <meta
           name="description"
           content="Однопользовательский Instagram — делитесь моментами своей жизни."
@@ -98,73 +104,89 @@ export default function Home() {
           <div className={styles.profile}>
             <img
               className={styles.avatar}
-              src={user.avatar}
+              src={getValue("avatar")}
               alt="Avatar"
               width={100}
               height={100}
             />
             <div className={styles.profileInfo}>
               <h2
-                onClick={() => setIsNameEditing(true)}
+                onClick={() => setValue("isNameEditing", true)}
                 style={{ cursor: "pointer" }}
               >
-                {isNameEditing ? (
+                {getValue("isNameEditing") ? (
                   <input
                     type="text"
-                    value={newName}
+                    value={getValue("newName")}
                     onChange={handleNameChange}
                     onBlur={() => {
                       handleNameSubmit();
-                      setIsNameEditing(false);
+                      setValue("isNameEditing", false);
                     }}
                     autoFocus
                     className={styles.editNameInput}
+                    placeholder="Ashura"
                   />
                 ) : (
-                  user.name
+                  getValue("name") || "Ashura"
                 )}
               </h2>
               <p onClick={toggleUsernameEdit} style={{ cursor: "pointer" }}>
-                {isUsernameEditing ? (
+                {getValue("isUsernameEditing") ? (
                   <input
                     type="text"
-                    value={newUsername}
+                    value={getValue("newUsername")}
                     onChange={handleUsernameChange}
                     onBlur={handleUsernameSubmit}
                     autoFocus
                     className={styles.editUsernameInput}
+                    placeholder="@rggedyman"
                   />
                 ) : (
-                  `@${user.username}`
+                  `@${getValue("username") || "rggedyman"}`
                 )}
               </p>
+
+              <div onClick={handleIconClick} style={{ cursor: "pointer" }}>
+                <CameraIcon fill="gray" size={18} label="Загрузить файл" />
+              </div>
               <input
                 type="file"
                 accept="image/*"
+                ref={fileInputRef}
                 onChange={handleAvatarChange}
-                className={styles.uploadInput}
+                style={{ display: "none" }}
               />
             </div>
           </div>
 
           <div className={styles.uploadContainer}>
+            <button
+              onClick={() => fileInputRef.current.click()}
+              className={styles.uploadButton}
+            >
+              <CameraIcon fill="white" size={20} label="Загрузить файл" />
+            </button>
             <input
               type="file"
               accept="image/*"
+              ref={fileInputRef}
               onChange={handleImageUpload}
-              className={styles.uploadInput}
+              style={{ display: "none" }}
             />
-            {imagePreview && (
+            {getValue("imagePreview") && (
               <div className={styles.previewContainer}>
                 <img
-                  src={imagePreview}
+                  src={getValue("imagePreview")}
                   alt="Preview"
                   className={styles.previewImage}
                 />
                 <input
                   type="text"
-                  value={newPostDescription}
-                  onChange={(e) => setNewPostDescription(e.target.value)}
+                  value={getValue("newPostDescription")}
+                  onChange={(e) =>
+                    setValue("newPostDescription", e.target.value)
+                  }
                   placeholder="Описание поста"
                   className={styles.postDescription}
                 />
@@ -174,7 +196,7 @@ export default function Home() {
           </div>
 
           <div className={styles.posts}>
-            {posts.map((post) => (
+            {getValue("posts").map((post) => (
               <div key={post.id} className={styles.postCard}>
                 <img
                   src={post.image}
