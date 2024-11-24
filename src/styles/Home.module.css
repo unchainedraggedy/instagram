@@ -35,27 +35,12 @@
   color: #888;
 }
 
-.nameInput {
-  margin-top: 10px;
-  padding: 5px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 100%;
-}
-
-.changeNameButton {
-  margin-top: 10px;
-  padding: 5px 10px;
-  background-color: #0070f3;
-  color: white;
+.editNameInput,
+.editUsernameInput {
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.changeNameButton:hover {
-  background-color: #005bb5;
+  outline: none;
+  background-color: #fff;
+  color: #000;
 }
 
 .uploadContainer {
@@ -73,6 +58,7 @@
   align-items: center;
 }
 
+
 .previewImage {
   max-width: 100%;
   height: auto;
@@ -83,23 +69,32 @@
 .postDescription {
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: none;
+  outline: none;
   margin-bottom: 10px;
   width: 100%;
+  background-color: transparent;
+  color: #000;
 }
 
 .uploadButton {
-  padding: 10px 20px;
   background-color: #0070f3;
+
   color: white;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 10%;
+  margin-left: none;
+  margin: 1rem;
+  margin-left: 0;
+  cursor: none;
 }
 
 .uploadButton:hover {
   background-color: #005bb5;
+}
+
+.previewContainer button {
+  padding: 1rem;
 }
 
 .posts {
@@ -127,19 +122,9 @@
   color: #ed4956;
 }
 
-/* В styles/Home.module.css */
 
-.avatarContainer {
-  position: relative; /* Это необходимо для того, чтобы разместить иконку поверх аватара */
-}
 
-.avatar {
-  border-radius: 50%; /* Чтобы аватар был круглый */
-}
 
-.cameraIconWrapper {
-  position: absolute;
-  top: 5px;  /* Настройте положение иконки относительно верхней границы аватара */
-  right: 5px; /* Настройте положение иконки относительно правой границы аватара */
-  cursor: pointer;
-}
+
+
+

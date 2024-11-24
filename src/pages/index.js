@@ -20,7 +20,8 @@ const userInitial = {
 export default function Home() {
   const { setValue, getValue } = useStateObject(userInitial);
 
-  const fileInputRef = useRef(null);
+  const fileInputRefAvatar = useRef(null);
+  const fileInputRefPost = useRef(null); 
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -83,8 +84,12 @@ export default function Home() {
     setValue("isUsernameEditing", false);
   };
 
-  const handleIconClick = () => {
-    fileInputRef.current.click();
+  const handleIconClickAvatar = () => {
+    fileInputRefAvatar.current.click();
+  };
+
+  const handleIconClickPost = () => {
+    fileInputRefPost.current.click();
   };
 
   return (
@@ -112,48 +117,61 @@ export default function Home() {
             <div className={styles.profileInfo}>
               <h2
                 onClick={() => setValue("isNameEditing", true)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", color: '#000' }}
               >
                 {getValue("isNameEditing") ? (
                   <input
-                    type="text"
-                    value={getValue("newName")}
-                    onChange={handleNameChange}
-                    onBlur={() => {
+                  type="text"
+                  value={getValue("newName")}
+                  onChange={handleNameChange}
+                  onBlur={() => {
+                    handleNameSubmit();
+                    setValue("isNameEditing", false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
                       handleNameSubmit();
                       setValue("isNameEditing", false);
-                    }}
-                    autoFocus
-                    className={styles.editNameInput}
-                    placeholder="Ashura"
-                  />
+                    }
+                  }}
+                  autoFocus
+                  className={styles.editNameInput}
+                  placeholder="Ashura"
+                />
+                
                 ) : (
                   getValue("name") || "Ashura"
                 )}
               </h2>
-              <p onClick={toggleUsernameEdit} style={{ cursor: "pointer" }}>
+              <p onClick={toggleUsernameEdit} style={{ cursor: "pointer", color: '#000' }}>
                 {getValue("isUsernameEditing") ? (
-                  <input
-                    type="text"
-                    value={getValue("newUsername")}
-                    onChange={handleUsernameChange}
-                    onBlur={handleUsernameSubmit}
-                    autoFocus
-                    className={styles.editUsernameInput}
-                    placeholder="@rggedyman"
-                  />
+                 <input
+                 type="text"
+                 value={getValue("newUsername")}
+                 onChange={handleUsernameChange}
+                 onBlur={handleUsernameSubmit}
+                 onKeyDown={(e) => {
+                   if (e.key === "Enter") {
+                     handleUsernameSubmit();
+                   }
+                 }}
+                 autoFocus
+                 className={styles.editUsernameInput}
+                 placeholder="@rggedyman"
+               />
+               
                 ) : (
                   `@${getValue("username") || "rggedyman"}`
                 )}
               </p>
 
-              <div onClick={handleIconClick} style={{ cursor: "pointer" }}>
-                <CameraIcon fill="gray" size={18} label="Загрузить файл" />
+              <div onClick={handleIconClickAvatar} style={{ cursor: "pointer" }}>
+                <CameraIcon fill="gray" size={18} label="Загрузить аватар"  />
               </div>
               <input
                 type="file"
                 accept="image/*"
-                ref={fileInputRef}
+                ref={fileInputRefAvatar}
                 onChange={handleAvatarChange}
                 style={{ display: "none" }}
               />
@@ -162,15 +180,15 @@ export default function Home() {
 
           <div className={styles.uploadContainer}>
             <button
-              onClick={() => fileInputRef.current.click()}
+              onClick={handleIconClickPost} 
               className={styles.uploadButton}
             >
-              <CameraIcon fill="white" size={20} label="Загрузить файл" />
+              <CameraIcon fill="white" size={20} label="Загрузить файл" style={{margin:'1rem'}} />
             </button>
             <input
               type="file"
               accept="image/*"
-              ref={fileInputRef}
+              ref={fileInputRefPost}
               onChange={handleImageUpload}
               style={{ display: "none" }}
             />
@@ -187,10 +205,15 @@ export default function Home() {
                   onChange={(e) =>
                     setValue("newPostDescription", e.target.value)
                   }
-                  placeholder="Описание поста"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handlePostSubmit();
+                    }
+                  }}
+                  placeholder="Ваш текст..."
                   className={styles.postDescription}
                 />
-                <Button onClick={handlePostSubmit}>Опубликовать</Button>
+                <Button onClick={handlePostSubmit} className='postButton'>Опубликовать</Button>
               </div>
             )}
           </div>
