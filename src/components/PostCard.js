@@ -11,7 +11,8 @@ export default function PostCard({ post }) {
         width={500}
         height={500}
       />
-      <p>{post.description}</p>
+      <p>
+      <strong>{post.username}</strong> {post.description}</p>
       <div className={styles.likes}>❤️ {post.likes} лайков</div>
     </div>
   );

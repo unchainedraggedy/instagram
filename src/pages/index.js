@@ -3,6 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Button from "../components/Button";
 import { CameraIcon } from "../components/CameraIcon";
+import PostCard from "../components/PostCard";
 import useStateObject from "../hooks/useState";
 
 const userInitial = {
@@ -21,7 +22,7 @@ export default function Home() {
   const { setValue, getValue } = useStateObject(userInitial);
 
   const fileInputRefAvatar = useRef(null);
-  const fileInputRefPost = useRef(null); 
+  const fileInputRefPost = useRef(null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -52,6 +53,7 @@ export default function Home() {
         ...getValue("posts"),
         {
           id: getValue("posts").length + 1,
+          username: getValue("username") || "rggedyman",
           image: getValue("imagePreview"),
           description: getValue("newPostDescription") || "",
           likes: 0,
@@ -103,10 +105,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <div className={styles.page}>
         <main className={styles.main}>
-          <div className={styles.profile}>
+          <section className={styles.profile}>
             <img
               className={styles.avatar}
               src={getValue("avatar")}
@@ -117,56 +118,53 @@ export default function Home() {
             <div className={styles.profileInfo}>
               <h2
                 onClick={() => setValue("isNameEditing", true)}
-                style={{ cursor: "pointer", color: '#000' }}
+                style={{ cursor: "pointer", color: "#000" }}
               >
                 {getValue("isNameEditing") ? (
                   <input
-                  type="text"
-                  value={getValue("newName")}
-                  onChange={handleNameChange}
-                  onBlur={() => {
-                    handleNameSubmit();
-                    setValue("isNameEditing", false);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    type="text"
+                    value={getValue("newName")}
+                    onChange={handleNameChange}
+                    onBlur={() => {
                       handleNameSubmit();
                       setValue("isNameEditing", false);
-                    }
-                  }}
-                  autoFocus
-                  className={styles.editNameInput}
-                  placeholder="Ashura"
-                />
-                
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleNameSubmit();
+                        setValue("isNameEditing", false);
+                      }
+                    }}
+                    autoFocus
+                    className={styles.editNameInput}
+                    placeholder="Name"
+                  />
                 ) : (
                   getValue("name") || "Ashura"
                 )}
               </h2>
-              <p onClick={toggleUsernameEdit} style={{ cursor: "pointer", color: '#000' }}>
+              <p onClick={toggleUsernameEdit} style={{ cursor: "pointer", color: "#000" }}>
                 {getValue("isUsernameEditing") ? (
-                 <input
-                 type="text"
-                 value={getValue("newUsername")}
-                 onChange={handleUsernameChange}
-                 onBlur={handleUsernameSubmit}
-                 onKeyDown={(e) => {
-                   if (e.key === "Enter") {
-                     handleUsernameSubmit();
-                   }
-                 }}
-                 autoFocus
-                 className={styles.editUsernameInput}
-                 placeholder="@rggedyman"
-               />
-               
+                  <input
+                    type="text"
+                    value={getValue("newUsername")}
+                    onChange={handleUsernameChange}
+                    onBlur={handleUsernameSubmit}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleUsernameSubmit();
+                      }
+                    }}
+                    autoFocus
+                    className={styles.editUsernameInput}
+                    placeholder="@yourUsername"
+                  />
                 ) : (
-                  `@${getValue("username") || "rggedyman"}`
+                  `@${getValue("username") || "ulyssestories"}`
                 )}
               </p>
-
-              <div onClick={handleIconClickAvatar} style={{ cursor: "pointer" }}>
-                <CameraIcon fill="gray" size={18} label="Загрузить аватар"  />
+              <div className={styles.cameraIcon} onClick={handleIconClickAvatar} style={{ cursor: "pointer" }}>
+                <CameraIcon fill="gray" size={18} label="Загрузить аватар" />
               </div>
               <input
                 type="file"
@@ -176,14 +174,10 @@ export default function Home() {
                 style={{ display: "none" }}
               />
             </div>
-          </div>
-
-          <div className={styles.uploadContainer}>
-            <button
-              onClick={handleIconClickPost} 
-              className={styles.uploadButton}
-            >
-              <CameraIcon fill="white" size={20} label="Загрузить файл" style={{margin:'1rem'}} />
+          </section>
+          <section className={styles.uploadContainer}>
+            <button onClick={handleIconClickPost} className={styles.uploadButton}>
+              <CameraIcon fill="white" size={40} label="Загрузить файл" />
             </button>
             <input
               type="file"
@@ -202,9 +196,7 @@ export default function Home() {
                 <input
                   type="text"
                   value={getValue("newPostDescription")}
-                  onChange={(e) =>
-                    setValue("newPostDescription", e.target.value)
-                  }
+                  onChange={(e) => setValue("newPostDescription", e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handlePostSubmit();
@@ -213,24 +205,17 @@ export default function Home() {
                   placeholder="Ваш текст..."
                   className={styles.postDescription}
                 />
-                <Button onClick={handlePostSubmit} className='postButton'>Опубликовать</Button>
+                <Button onClick={handlePostSubmit} className="postButton">
+                  Опубликовать
+                </Button>
               </div>
             )}
-          </div>
-
-          <div className={styles.posts}>
+          </section>
+          <section className={styles.posts}>
             {getValue("posts").map((post) => (
-              <div key={post.id} className={styles.postCard}>
-                <img
-                  src={post.image}
-                  alt={`Post ${post.id}`}
-                  className={styles.postImage}
-                />
-                <p>{post.description}</p>
-                <div className={styles.likes}>❤️ {post.likes} лайков</div>
-              </div>
+              <PostCard key={post.id} post={post} />
             ))}
-          </div>
+          </section>
         </main>
       </div>
     </>

@@ -17,6 +17,7 @@
 }
 
 .avatar {
+  border: 1px solid #000;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -86,7 +87,7 @@
   margin-left: none;
   margin: 1rem;
   margin-left: 0;
-  cursor: none;
+  cursor: pointer;
 }
 
 .uploadButton:hover {
@@ -108,6 +109,11 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color:#000
+}
+
+.postCard p {
+  padding: 1rem;
 }
 
 .postImage {
@@ -121,10 +127,5 @@
   font-weight: bold;
   color: #ed4956;
 }
-
-
-
-
-
 
 
